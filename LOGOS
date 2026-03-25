@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGOS — Galerie d'Art</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--blanc:#FAFAF7;--beige:#E8E0D0;--beige-fonce:#C8B99A;--noir:#111110;--gris:#6B6B68;--or:#B8965A;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--blanc);color:var(--noir);font-family:'Montserrat',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;}
+#cursor{width:10px;height:10px;background:var(--noir);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .3s,height .3s,background .3s;}
+#cursor.grow{width:36px;height:36px;background:rgba(17,17,16,.12);}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(250,250,247,.93);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06);}
+.logo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;letter-spacing:14px;text-transform:uppercase;color:var(--noir);text-decoration:none;}
+.logo span{color:var(--or);}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{font-size:10px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;color:var(--gris);transition:color .3s;}
+.nav-links a:hover{color:var(--noir);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.admin-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--or);border:1px solid var(--or);padding:4px 12px;display:none;}
+.admin-badge.visible{display:inline;}
+.btn-outline{font-size:10px;letter-spacing:2px;text-transform:uppercase;background:none;border:1px solid var(--noir);color:var(--noir);padding:10px 20px;cursor:none;transition:all .3s;font-family:'Montserrat',sans-serif;font-weight:300;}
+.btn-outline:hover{background:var(--noir);color:var(--blanc);}
+.user-chip{display:none;align-items:center;gap:8px;font-size:10px;letter-spacing:1px;color:var(--gris);cursor:none;}
+.user-chip.visible{display:flex;}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--noir);display:flex;align-items:center;justify-content:center;color:var(--blanc);font-size:12px;font-weight:400;flex-shrink:0;}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;padding:0 60px;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,var(--beige) 0%,transparent 70%);opacity:.5;}
+.hero-eyebrow{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--beige-fonce);margin-bottom:28px;animation:fadeUp 1s ease both;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(72px,12vw,160px);font-weight:300;line-height:.9;text-align:center;letter-spacing:-2px;animation:fadeUp 1s ease .15s both;}
+.hero-title em{font-style:italic;color:var(--gris);}
+.hero-sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gris);margin-top:32px;animation:fadeUp 1s ease .3s both;text-align:center;max-width:400px;line-height:2;}
+.hero-line{width:1px;height:80px;background:var(--beige-fonce);margin-top:60px;animation:fadeUp 1s ease .5s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.section-label{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--beige-fonce);margin-bottom:60px;display:flex;align-items:center;gap:20px;}
+.section-label::before{content:'';display:block;width:40px;height:1px;background:var(--beige-fonce);}
+.galerie-section{padding:100px 60px;background:var(--blanc);}
+.galerie-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:80px;}
+.galerie-title{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;line-height:1.1;}
+.galerie-title em{font-style:italic;color:var(--gris);}
+.galerie-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+.tableau-card{display:flex;flex-direction:column;animation:fadeUp .8s ease both;cursor:none;}
+.tableau-card:nth-child(1){animation-delay:.05s}.tableau-card:nth-child(2){animation-delay:.12s}.tableau-card:nth-child(3){animation-delay:.19s}.tableau-card:nth-child(4){animation-delay:.26s}.tableau-card:nth-child(5){animation-delay:.33s}.tableau-card:nth-child(6){animation-delay:.4s}
+.cadre-wrapper{position:relative;padding:18px;background:var(--beige);border:1px solid rgba(0,0,0,.08);box-shadow:0 0 0 1px rgba(0,0,0,.04),4px 4px 0 rgba(0,0,0,.03),8px 8px 20px rgba(0,0,0,.08),inset 0 0 0 3px rgba(255,255,255,.5);transition:transform .5s cubic-bezier(.25,.46,.45,.94),box-shadow .5s;aspect-ratio:3/4;overflow:hidden;}
+.cadre-wrapper::before{content:'';position:absolute;inset:10px;border:1px solid rgba(0,0,0,.12);z-index:2;pointer-events:none;}
+.cadre-wrapper::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.3) 0%,transparent 50%,rgba(0,0,0,.05) 100%);z-index:3;pointer-events:none;}
+.tableau-card:hover .cadre-wrapper{transform:translateY(-8px);box-shadow:0 0 0 1px rgba(0,0,0,.06),4px 4px 0 rgba(0,0,0,.04),16px 24px 40px rgba(0,0,0,.14),inset 0 0 0 3px rgba(255,255,255,.5);}
+.tableau-placeholder{width:100%;height:100%;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.p1{background:linear-gradient(145deg,#2C3E50,#4A6741 40%,#8B7355)}.p2{background:linear-gradient(200deg,#D4A5A5,#9B8EA8 50%,#6B8CAE)}.p3{background:linear-gradient(120deg,#1a1a2e,#16213e 40%,#0f3460)}.p4{background:linear-gradient(160deg,#E8D5B7,#C4956A 50%,#8B6914)}.p5{background:linear-gradient(180deg,#2D4A3E,#588157 40%,#A7C4A0)}.p6{background:linear-gradient(130deg,#3D2B1F,#8B4513 50%,#D2691E)}
+.overlay-btns{position:absolute;inset:18px;z-index:10;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;gap:8px;opacity:0;transition:opacity .3s;}
+.tableau-card:hover .overlay-btns{opacity:1;}
+.view3d-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(250,250,247,.92);border:1px solid rgba(17,17,16,.25);color:var(--noir);padding:9px 16px;cursor:none;backdrop-filter:blur(6px);font-family:'Montserrat',sans-serif;font-weight:300;transition:all .2s;}
+.view3d-btn:hover{background:var(--noir);color:var(--blanc);}
+.tableau-info{padding:20px 0 0;display:flex;flex-direction:column;gap:6px;}
+.tableau-artiste{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--beige-fonce);}
+.tableau-nom{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;font-style:italic;}
+.tableau-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.tableau-prix{font-size:16px;font-weight:400;letter-spacing:1px;}
+.tableau-prix span{font-family:'Cormorant Garamond',serif;font-size:20px;}
+.tableau-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;background:none;border:1px solid var(--noir);color:var(--noir);padding:8px 18px;cursor:none;transition:all .3s;font-family:'Montserrat',sans-serif;font-weight:300;}
+.tableau-btn:hover{background:var(--noir);color:var(--blanc);}
+.about-section{padding:100px 60px;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;background:var(--noir);color:var(--blanc);}
+.about-section .section-label{color:var(--beige-fonce);}
+.about-section .section-label::before{background:var(--beige-fonce);}
+.about-title-disp{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;line-height:1.1;margin-bottom:32px;}
+.about-text-disp{font-size:13px;line-height:2.2;color:rgba(255,255,255,.6);font-weight:300;}
+.about-visual{aspect-ratio:1;background:linear-gradient(145deg,#1a1a1a,#2a2a2a);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:100px;font-weight:300;color:rgba(255,255,255,.04);letter-spacing:20px;}
+.edit-about-btn{display:none;margin-top:18px;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.5);padding:8px 18px;cursor:none;font-family:'Montserrat',sans-serif;font-weight:300;transition:all .3s;}
+.edit-about-btn:hover{border-color:#fff;color:#fff;}
+.edit-about-btn.visible{display:inline-block;}
+footer{padding:60px;background:var(--noir);color:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06);}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:10px;color:rgba(255,255,255,.5);text-transform:uppercase;}
+.footer-text{font-size:10px;letter-spacing:2px;}
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(17,17,16,.72);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
+.modal-overlay.active{display:flex;}
+.modal-overlay.visible{opacity:1;}
+.modal{background:var(--blanc);width:520px;max-width:92vw;max-height:90vh;overflow-y:auto;padding:52px;position:relative;border:1px solid var(--beige);transform:translateY(30px);transition:transform .4s cubic-bezier(.25,.46,.45,.94);}
+.modal-overlay.visible .modal{transform:translateY(0);}
+.modal-wide{width:680px;}
+.modal-close{position:absolute;top:22px;right:26px;background:none;border:none;font-size:18px;cursor:none;color:var(--gris);transition:color .2s;}
+.modal-close:hover{color:var(--noir);}
+.modal-eyebrow{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--beige-fonce);margin-bottom:14px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;margin-bottom:36px;line-height:1.1;}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.form-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gris);}
+.form-input{border:none;border-bottom:1px solid var(--beige);padding:12px 0;font-size:14px;font-family:'Montserrat',sans-serif;font-weight:300;background:transparent;color:var(--noir);outline:none;transition:border-color .3s;width:100%;}
+.form-input:focus{border-color:var(--noir);}
+.form-textarea{border:1px solid var(--beige);padding:14px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:300;background:transparent;color:var(--noir);outline:none;transition:border-color .3s;width:100%;resize:vertical;min-height:110px;line-height:1.8;}
+.form-textarea:focus{border-color:var(--noir);}
+.form-error{font-size:10px;color:#c0392b;letter-spacing:1px;display:none;}
+.submit-btn{width:100%;background:var(--noir);color:var(--blanc);border:none;padding:16px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:background .3s;font-weight:300;margin-top:8px;}
+.submit-btn:hover{background:#333;}
+.auth-divider{display:flex;align-items:center;gap:16px;margin:24px 0;color:var(--beige-fonce);font-size:10px;letter-spacing:2px;text-transform:uppercase;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--beige);}
+.social-btns{display:flex;flex-direction:column;gap:10px;}
+.social-btn{display:flex;align-items:center;gap:14px;border:1px solid var(--beige);padding:13px 20px;cursor:none;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:300;letter-spacing:1px;background:var(--blanc);color:var(--noir);transition:all .3s;width:100%;}
+.social-btn:hover{border-color:var(--noir);background:var(--noir);color:var(--blanc);}
+.social-btn svg{width:18px;height:18px;flex-shrink:0;}
+.social-btn:hover svg path{fill:#fff!important;}
+.auth-switch{text-align:center;margin-top:22px;font-size:11px;color:var(--gris);}
+.auth-switch a{color:var(--noir);text-decoration:underline;cursor:none;}
+.admin-tabs{display:flex;border-bottom:1px solid var(--beige);margin-bottom:28px;}
+.admin-tab{font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:10px 16px;background:none;border:none;cursor:none;color:var(--gris);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Montserrat',sans-serif;font-weight:300;transition:all .2s;}
+.admin-tab.active{color:var(--noir);border-bottom-color:var(--noir);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.prix-list{display:flex;flex-direction:column;max-height:280px;overflow-y:auto;}
+.prix-item{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--beige);}
+.prix-item-nom{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;}
+.prix-input-wrap{display:flex;align-items:center;gap:8px;}
+.prix-currency{font-size:12px;color:var(--gris);}
+.prix-input{border:1px solid var(--beige);padding:5px 8px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:300;width:80px;text-align:right;outline:none;background:var(--blanc);color:var(--noir);transition:border-color .2s;}
+.prix-input:focus{border-color:var(--noir);}
+.prix-save-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--noir);color:var(--blanc);border:none;padding:5px 10px;cursor:none;font-family:'Montserrat',sans-serif;font-weight:300;}
+.save-all-btn{margin-top:18px;background:none;border:1px solid var(--noir);color:var(--noir);padding:10px 22px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all .3s;font-weight:300;}
+.save-all-btn:hover{background:var(--noir);color:var(--blanc);}
+.success-msg{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#27ae60;display:none;margin-top:12px;}
+.success-msg.show{display:block;animation:fadeUp .4s ease;}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.upload-card{border:1px solid var(--beige);padding:12px;display:flex;align-items:center;gap:10px;transition:border-color .2s;}
+.upload-card:hover{border-color:var(--beige-fonce);}
+.upload-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--beige-fonce);min-width:26px;}
+.upload-card-info{flex:1;}
+.upload-card-name{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;}
+.upload-card-status{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-top:2px;}
+.upload-file-btn{font-size:8px;letter-spacing:2px;text-transform:uppercase;background:none;border:1px solid var(--beige);padding:5px 8px;cursor:none;font-family:'Montserrat',sans-serif;color:var(--noir);transition:all .2s;}
+.upload-file-btn:hover{border-color:var(--noir);}
+input[type="file"]{display:none;}
+.oeuvre-edit-row{border:1px solid var(--beige);padding:12px;margin-bottom:8px;display:grid;grid-template-columns:1fr 1fr 80px;gap:10px;align-items:end;}
+.oeuvre-edit-row input{border:none;border-bottom:1px solid var(--beige);padding:5px 0;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:300;background:transparent;color:var(--noir);outline:none;width:100%;}
+.oeuvre-edit-row input:focus{border-bottom-color:var(--noir);}
+.mini-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-bottom:4px;}
+/* VIEWER 3D */
+.viewer3d-overlay{position:fixed;inset:0;background:#080808;z-index:2000;display:none;flex-direction:column;opacity:0;transition:opacity .4s;}
+.viewer3d-overlay.active{display:flex;}
+.viewer3d-overlay.visible{opacity:1;}
+.viewer3d-header{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;z-index:10;background:linear-gradient(rgba(8,8,8,.8),transparent);}
+.v3d-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;font-style:italic;color:rgba(255,255,255,.75);}
+.v3d-close{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);padding:7px 18px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:all .3s;}
+.v3d-close:hover{border-color:#fff;color:#fff;}
+.v3d-scene{flex:1;position:relative;}
+#viewer3d{display:block;width:100%;height:100%;}
+.v3d-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);}
+.v3d-sidebar{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:220px;display:flex;flex-direction:column;gap:8px;}
+.v3d-artist{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.v3d-nom{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;font-style:italic;color:rgba(255,255,255,.88);line-height:1.1;}
+.v3d-prix{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--or);margin-top:6px;}
+.v3d-acq{margin-top:14px;background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);padding:10px 20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:all .3s;display:inline-block;}
+.v3d-acq:hover{border-color:#fff;color:#fff;}
+/* USER DROPDOWN */
+.user-dropdown-wrap{position:fixed;top:76px;right:60px;background:var(--blanc);border:1px solid var(--beige);box-shadow:0 12px 40px rgba(0,0,0,.1);z-index:600;display:none;min-width:170px;}
+.user-dropdown-wrap.active{display:block;}
+.udrop-item{display:block;width:100%;padding:10px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);background:none;border:none;cursor:none;text-align:left;font-family:'Montserrat',sans-serif;font-weight:300;transition:color .2s;}
+.udrop-item:hover{color:var(--noir);}
+.udrop-sep{height:1px;background:var(--beige);}
+.toast{position:fixed;bottom:40px;right:60px;background:var(--noir);color:var(--blanc);padding:14px 26px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:9000;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.25,.46,.45,.94);}
+.toast.show{transform:translateY(0);opacity:1;}
+/* LOGGED IN SECTION */
+.fav-empty{background:var(--beige);padding:18px;font-size:12px;color:var(--gris);font-style:italic;}
+.logout-btn{background:none;border:1px solid var(--noir);color:var(--noir);padding:12px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all .3s;font-weight:300;width:100%;margin-top:8px;}
+.logout-btn:hover{background:var(--noir);color:var(--blanc);}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div class="toast" id="toast"></div>
+ 
+<nav>
+  <a href="#" class="logo">LOG<span>O</span>S</a>
+  <ul class="nav-links">
+    <li><a href="#galerie">Collection</a></li>
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="admin-badge" id="adminBadge">Admin</span>
+    <div class="user-chip" id="userChip" onclick="toggleDropdown()">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span id="userName">—</span> ▾
+    </div>
+    <button class="btn-outline" id="openAccountBtn">Mon Compte</button>
+    <button class="btn-outline" id="openAdminBtn" style="display:none">Dashboard</button>
+  </div>
+</nav>
+ 
+<!-- USER DROPDOWN -->
+<div class="user-dropdown-wrap" id="userDropdown">
+  <button class="udrop-item" onclick="openMyAccount()">Mon profil</button>
+  <div class="udrop-sep"></div>
+  <button class="udrop-item" onclick="logout()" style="color:#c0392b">Se déconnecter</button>
+</div>
+ 
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Galerie d'Art en Ligne</div>
+  <h1 class="hero-title">L'art<br><em>à portée</em><br>de regard</h1>
+  <p class="hero-sub">Œuvres originales sélectionnées avec soin. Livraison en France et à l'international.</p>
+  <div class="hero-line"></div>
+</section>
+ 
+<!-- GALERIE -->
+<section class="galerie-section" id="galerie">
+  <div class="galerie-header">
+    <div>
+      <div class="section-label">Collection actuelle</div>
+      <h2 class="galerie-title">Nos <em>œuvres</em><br>à vendre</h2>
+    </div>
+  </div>
+  <div class="galerie-grid" id="galerieGrid"></div>
+</section>
+ 
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div>
+    <div class="section-label" style="color:var(--beige-fonce)">Notre histoire</div>
+    <h2 class="about-title-disp" id="aboutTitle">L'art comme<br><em>langage universel</em></h2>
+    <p class="about-text-disp" id="aboutText">LOGOS est une galerie d'art en ligne dédiée à la découverte et à la promotion d'œuvres originales. Nous croyons que l'art devrait être accessible à tous, sans barrière géographique. Chaque tableau proposé est sélectionné avec soin pour sa valeur esthétique et son caractère unique.</p>
+    <button class="edit-about-btn" id="editAboutBtn" onclick="openModal('editAboutOverlay')">✎ Modifier ce texte</button>
+  </div>
+  <div class="about-visual">LOGOS</div>
+</section>
+ 
+<footer>
+  <div class="footer-logo">LOGOS</div>
+  <div class="footer-text">© 2025 LOGOS Galerie · Tous droits réservés</div>
+  <div class="footer-text" id="contact">contact@logos-galerie.fr</div>
+</footer>
+ 
+<!-- ===== VIEWER 3D ===== -->
+<div class="viewer3d-overlay" id="viewer3dOverlay">
+  <div class="viewer3d-header">
+    <div class="v3d-title" id="v3dTitle">—</div>
+    <button class="v3d-close" onclick="closeViewer3D()">✕ Fermer</button>
+  </div>
+  <div class="v3d-scene">
+    <canvas id="viewer3d"></canvas>
+    <div class="v3d-hint">🖱 Glisser pour pivoter · Molette pour zoomer</div>
+  </div>
+  <div class="v3d-sidebar" id="v3dSidebar">
+    <div class="v3d-artist" id="v3dArtist">—</div>
+    <div class="v3d-nom" id="v3dNom">—</div>
+    <div class="v3d-prix" id="v3dPrix">—</div>
+    <button class="v3d-acq" onclick="showToast('Ajouté au panier ✓')">Acquérir cette œuvre</button>
+  </div>
+</div>
+ 
+<!-- ===== MODAL COMPTE ===== -->
+<div class="modal-overlay" id="accountOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('accountOverlay')">✕</button>
+    <!-- LOGIN -->
+    <div id="viewLogin">
+      <div class="modal-eyebrow">Bienvenue sur LOGOS</div>
+      <h2 class="modal-title">Se connecter</h2>
+      <div class="social-btns">
+        <button class="social-btn" onclick="socialLogin('Google')">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continuer avec Google
+        </button>
+        <button class="social-btn" onclick="socialLogin('Apple')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Continuer avec Apple
+        </button>
+        <button class="social-btn" onclick="socialLogin('Facebook')">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Continuer avec Facebook
+        </button>
+      </div>
+      <div class="auth-divider">ou par e-mail</div>
+      <div class="form-group"><label class="form-label">E-mail</label><input type="email" class="form-input" id="loginEmail" placeholder="vous@exemple.com"></div>
+      <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" id="loginPwd" placeholder="••••••••"><div class="form-error" id="loginErr">E-mail ou mot de passe incorrect</div></div>
+      <button class="submit-btn" onclick="emailLogin()">Se connecter →</button>
+      <div class="auth-switch">Pas de compte ? <a href="#" onclick="switchAuth('register')">Créer un compte</a></div>
+    </div>
+    <!-- REGISTER -->
+    <div id="viewRegister" style="display:none">
+      <div class="modal-eyebrow">Rejoindre LOGOS</div>
+      <h2 class="modal-title">Créer un<br>compte</h2>
+      <div class="social-btns">
+        <button class="social-btn" onclick="socialLogin('Google')">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          S'inscrire avec Google
+        </button>
+        <button class="social-btn" onclick="socialLogin('Apple')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          S'inscrire avec Apple
+        </button>
+      </div>
+      <div class="auth-divider">ou</div>
+      <div class="form-group"><label class="form-label">Prénom & Nom</label><input type="text" class="form-input" id="regName" placeholder="Marie Dupont"></div>
+      <div class="form-group"><label class="form-label">E-mail</label><input type="email" class="form-input" id="regEmail" placeholder="vous@exemple.com"></div>
+      <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" id="regPwd" placeholder="8 caractères minimum"><div class="form-error" id="regErr">Veuillez remplir tous les champs</div></div>
+      <button class="submit-btn" onclick="emailRegister()">Créer mon compte →</button>
+      <div class="auth-switch">Déjà un compte ? <a href="#" onclick="switchAuth('login')">Se connecter</a></div>
+    </div>
+    <!-- LOGGED IN -->
+    <div id="viewLoggedIn" style="display:none">
+      <div class="modal-eyebrow">Espace personnel</div>
+      <h2 class="modal-title" id="loggedInTitle">Bonjour —</h2>
+      <p style="font-size:12px;color:var(--gris);line-height:2;margin-bottom:20px">Retrouvez vos œuvres favorites et l'historique de vos commandes.</p>
+      <div class="fav-empty">Aucun favori pour le moment.</div>
+      <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ===== MODAL ADMIN ===== -->
+<div class="modal-overlay" id="adminOverlay">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('adminOverlay')">✕</button>
+    <!-- LOGIN ADMIN -->
+    <div id="adminLoginSection">
+      <div class="modal-eyebrow">Accès Restreint</div>
+      <h2 class="modal-title">Espace<br>Administrateur</h2>
+      <div class="form-group"><label class="form-label">Identifiant</label><input type="text" class="form-input" id="adminUser" placeholder="admin"></div>
+      <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" id="adminPass" placeholder="••••••••"><div class="form-error" id="adminErr">Identifiants incorrects</div></div>
+      <button class="submit-btn" onclick="adminLogin()">Accéder →</button>
+    </div>
+    <!-- PANEL ADMIN -->
+    <div id="adminPanelSection" style="display:none">
+      <div class="modal-eyebrow">Tableau de bord</div>
+      <h2 class="modal-title">Gestion<br>LOGOS</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="prix">Prix</button>
+        <button class="admin-tab" data-tab="oeuvres">Œuvres</button>
+        <button class="admin-tab" data-tab="histoire">Histoire</button>
+        <button class="admin-tab" data-tab="photos">Photos</button>
+      </div>
+      <div class="tab-content active" id="tab-prix">
+        <div class="prix-list" id="prixList"></div>
+        <button class="save-all-btn" onclick="saveAllPrix()">Tout enregistrer</button>
+        <div class="success-msg" id="okPrix">✓ Prix mis à jour</div>
+      </div>
+      <div class="tab-content" id="tab-oeuvres">
+        <div id="oeuvrEditList"></div>
+        <button class="save-all-btn" onclick="saveOeuvres()">Enregistrer les œuvres</button>
+        <div class="success-msg" id="okOeuvres">✓ Œuvres mises à jour</div>
+      </div>
+      <div class="tab-content" id="tab-histoire">
+        <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="adminAboutTitle"></div>
+        <div class="form-group"><label class="form-label">Texte</label><textarea class="form-textarea" id="adminAboutText"></textarea></div>
+        <button class="save-all-btn" onclick="saveAbout()">Enregistrer</button>
+        <div class="success-msg" id="okAbout">✓ Histoire mise à jour</div>
+      </div>
+      <div class="tab-content" id="tab-photos">
+        <div class="upload-grid" id="uploadGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- EDIT ABOUT QUICK MODAL -->
+<div class="modal-overlay" id="editAboutOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('editAboutOverlay')">✕</button>
+    <div class="modal-eyebrow">Notre Histoire</div>
+    <h2 class="modal-title">Modifier le<br>contenu</h2>
+    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="qaTitle"></div>
+    <div class="form-group"><label class="form-label">Texte</label><textarea class="form-textarea" id="qaText"></textarea></div>
+    <button class="submit-btn" onclick="saveAboutQuick()">Enregistrer →</button>
+  </div>
+</div>
+ 
+<script>
+/* DATA */
+const T=[
+  {id:0,nom:'Forêt Profonde', artiste:'Artiste Inconnu',annee:'2024',prix:1200,ico:'🎨',cls:'p1'},
+  {id:1,nom:'Horizon Doux',   artiste:'Artiste Inconnu',annee:'2023',prix:850, ico:'🖼️',cls:'p2'},
+  {id:2,nom:'Nuit Bleue',     artiste:'Artiste Inconnu',annee:'2024',prix:2400,ico:'🌊',cls:'p3'},
+  {id:3,nom:"Lumière d'Or",   artiste:'Artiste Inconnu',annee:'2022',prix:3100,ico:'☀️',cls:'p4'},
+  {id:4,nom:'Verdure Calme',  artiste:'Artiste Inconnu',annee:'2023',prix:980, ico:'🌿',cls:'p5'},
+  {id:5,nom:'Terre Ancienne', artiste:'Artiste Inconnu',annee:'2024',prix:1750,ico:'🏛️',cls:'p6'},
+];
+const AU='admin', AP='logos2024';
+let isAdmin=false, cUser=null;
+const imgs={};
+function fmt(n){return Number(n).toLocaleString('fr-FR');}
+ 
+function loadData(){
+  T.forEach(t=>{
+    const p=localStorage.getItem('lp'+t.id); if(p)t.prix=+p;
+    const n=localStorage.getItem('ln'+t.id); if(n)t.nom=n;
+    const a=localStorage.getItem('la'+t.id); if(a)t.artiste=a;
+    const y=localStorage.getItem('ly'+t.id); if(y)t.annee=y;
+    const img=localStorage.getItem('li'+t.id); if(img)imgs[t.id]=img;
+  });
+  const at=localStorage.getItem('labout-t'),ab=localStorage.getItem('labout-b');
+  if(at)document.getElementById('aboutTitle').innerHTML=at;
+  if(ab)document.getElementById('aboutText').textContent=ab;
+  const u=localStorage.getItem('lcuser'); if(u){cUser=JSON.parse(u);applyUser();}
+}
+ 
+/* CURSOR */
+const cur=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+document.addEventListener('click',()=>document.getElementById('userDropdown').classList.remove('active'));
+function attachCursors(){document.querySelectorAll('a,button,label,.tableau-card,.user-chip').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('grow'));el.addEventListener('mouseleave',()=>cur.classList.remove('grow'));});}
+ 
+/* GALLERY */
+function buildGallery(){
+  const g=document.getElementById('galerieGrid'); g.innerHTML='';
+  T.forEach(t=>{
+    const hi=!!imgs[t.id];
+    const inner=hi
+      ?`<div style="width:100%;height:100%;position:absolute;inset:0;background:url(${imgs[t.id]}) center/cover"></div>`
+      :`<div class="tableau-placeholder ${t.cls}" style="width:100%;height:100%;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="opacity:.15;font-size:48px">${t.ico}</span></div>`;
+    g.innerHTML+=`<div class="tableau-card">
+      <div class="cadre-wrapper" style="position:relative;"><div id="img-${t.id}">${inner}</div>
+      <div class="overlay-btns"><button class="view3d-btn" onclick="openV3D(${t.id})">⬡ Vue 3D</button></div></div>
+      <div class="tableau-info">
+        <div class="tableau-artiste" id="art-d${t.id}">${t.artiste} · ${t.annee}</div>
+        <div class="tableau-nom" id="nom-d${t.id}">${t.nom}</div>
+        <div class="tableau-bottom">
+          <div class="tableau-prix"><span id="px-d${t.id}">${fmt(t.prix)}</span> €</div>
+          <button class="tableau-btn" onclick="showToast('Ajouté — ${t.nom.replace(/'/g,"\\'")} ✓')">Acquérir</button>
+        </div>
+      </div></div>`;
+  });
+  attachCursors();
+  document.querySelectorAll('.tableau-card').forEach(c=>{c.style.animationPlayState='paused';obs.observe(c);});
+}
+ 
+/* MODAL HELPERS */
+function openModal(id){const o=document.getElementById(id);o.classList.add('active');setTimeout(()=>o.classList.add('visible'),10);}
+function closeModal(id){const o=document.getElementById(id);o.classList.remove('visible');setTimeout(()=>o.classList.remove('active'),300);}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeModal(o.id);}));
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function showOk(id){const s=document.getElementById(id);s.classList.add('show');setTimeout(()=>s.classList.remove('show'),2500);}
+ 
+/* AUTH */
+document.getElementById('openAccountBtn').addEventListener('click',()=>{
+  if(cUser){toggleDropdown();}else{switchAuth('login');openModal('accountOverlay');}
+});
+function toggleDropdown(e){if(e)e.stopPropagation();document.getElementById('userDropdown').classList.toggle('active');}
+document.getElementById('userChip').addEventListener('click',toggleDropdown);
+ 
+function switchAuth(v){
+  document.getElementById('viewLogin').style.display=v==='login'?'block':'none';
+  document.getElementById('viewRegister').style.display=v==='register'?'block':'none';
+  document.getElementById('viewLoggedIn').style.display=v==='logged'?'block':'none';
+}
+function socialLogin(p){
+  loginUser({name:'Utilisateur '+p,email:p.toLowerCase()+'@logos.fr'});
+  closeModal('accountOverlay');
+  showToast('Connecté via '+p+' ✓');
+}
+function emailLogin(){
+  const e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPwd').value,err=document.getElementById('loginErr');
+  const users=JSON.parse(localStorage.getItem('lusers')||'[]');
+  const f=users.find(u=>u.email===e&&u.pass===p);
+  if(!f){err.style.display='block';return;}err.style.display='none';
+  loginUser(f);closeModal('accountOverlay');showToast('Bienvenue '+f.name+' ✓');
+}
+function emailRegister(){
+  const n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim(),p=document.getElementById('regPwd').value,err=document.getElementById('regErr');
+  if(!n||!e||p.length<6){err.style.display='block';return;}err.style.display='none';
+  const users=JSON.parse(localStorage.getItem('lusers')||'[]');
+  users.push({name:n,email:e,pass:p});localStorage.setItem('lusers',JSON.stringify(users));
+  loginUser({name:n,email:e});closeModal('accountOverlay');showToast('Compte créé — Bienvenue '+n+' ✓');
+}
+function loginUser(u){cUser=u;localStorage.setItem('lcuser',JSON.stringify(u));applyUser();}
+function applyUser(){
+  document.getElementById('userChip').classList.add('visible');
+  document.getElementById('userAvatar').textContent=cUser.name.charAt(0).toUpperCase();
+  document.getElementById('userName').textContent=cUser.name.split(' ')[0];
+  document.getElementById('openAccountBtn').style.display='none';
+  document.getElementById('loggedInTitle').textContent='Bonjour, '+cUser.name.split(' ')[0]+' 👋';
+  attachCursors();
+}
+function logout(){cUser=null;localStorage.removeItem('lcuser');document.getElementById('userChip').classList.remove('visible');document.getElementById('openAccountBtn').style.display='inline-block';closeModal('accountOverlay');document.getElementById('userDropdown').classList.remove('active');showToast('Déconnecté');}
+function openMyAccount(){switchAuth('logged');openModal('accountOverlay');document.getElementById('userDropdown').classList.remove('active');}
+ 
+/* ADMIN */
+document.getElementById('openAdminBtn').addEventListener('click',()=>openModal('adminOverlay'));
+function adminLogin(){
+  const u=document.getElementById('adminUser').value.trim(),p=document.getElementById('adminPass').value;
+  if(u===AU&&p===AP){
+    document.getElementById('adminErr').style.display='none';
+    document.getElementById('adminLoginSection').style.display='none';
+    document.getElementById('adminPanelSection').style.display='block';
+    document.getElementById('adminBadge').classList.add('visible');
+    document.getElementById('openAdminBtn').style.display='inline-block';
+    document.getElementById('editAboutBtn').classList.add('visible');
+    isAdmin=true; buildAdminPanel(); showToast('Accès admin accordé');
+  }else{document.getElementById('adminErr').style.display='block';document.getElementById('adminPass').value='';}
+}
+ 
+function buildAdminPanel(){
+  // PRIX
+  const pl=document.getElementById('prixList'); pl.innerHTML='';
+  T.forEach(t=>{
+    const r=document.createElement('div');r.className='prix-item';
+    r.innerHTML=`<div class="prix-item-nom">${t.nom}</div>
+    <div class="prix-input-wrap"><span class="prix-currency">€</span>
+    <input type="number" class="prix-input" id="ap${t.id}" value="${t.prix}" min="0">
+    <button class="prix-save-btn" onclick="savePrix(${t.id})">OK</button></div>`;
+    pl.appendChild(r);
+  });
+  // OEUVRES
+  const ol=document.getElementById('oeuvrEditList'); ol.innerHTML='';
+  T.forEach(t=>{
+    ol.innerHTML+=`<div class="oeuvre-edit-row">
+      <div><div class="mini-label">Titre</div><input id="an${t.id}" value="${t.nom}"></div>
+      <div><div class="mini-label">Artiste</div><input id="aa${t.id}" value="${t.artiste}"></div>
+      <div><div class="mini-label">Année</div><input id="ay${t.id}" value="${t.annee}"></div>
+    </div>`;
+  });
+  // HISTOIRE
+  document.getElementById('adminAboutTitle').value=document.getElementById('aboutTitle').innerText||'';
+  document.getElementById('adminAboutText').value=document.getElementById('aboutText').textContent||'';
+  // PHOTOS
+  const ug=document.getElementById('uploadGrid'); ug.innerHTML='';
+  T.forEach(t=>{
+    const c=document.createElement('div');c.className='upload-card';
+    c.innerHTML=`<div class="upload-num">0${t.id+1}</div>
+    <div class="upload-card-info"><div class="upload-card-name">${t.nom}</div>
+    <div class="upload-card-status" id="us${t.id}">${imgs[t.id]?'Photo ajoutée ✓':'En attente'}</div></div>
+    <label class="upload-file-btn" for="fi${t.id}">Photo</label>
+    <input type="file" id="fi${t.id}" accept="image/*" onchange="handleUpload(event,${t.id})">`;
+    ug.appendChild(c);
+  });
+  attachCursors();
+}
+ 
+document.querySelectorAll('.admin-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  });
+});
+ 
+function savePrix(id){
+  const v=parseFloat(document.getElementById('ap'+id).value);
+  if(isNaN(v)||v<0)return;
+  T[id].prix=v;localStorage.setItem('lp'+id,v);
+  const el=document.getElementById('px-d'+id);if(el)el.textContent=fmt(v);
+  showToast('Prix mis à jour — '+T[id].nom);
+}
+function saveAllPrix(){T.forEach(t=>savePrix(t.id));showOk('okPrix');}
+function saveOeuvres(){
+  T.forEach(t=>{
+    const n=document.getElementById('an'+t.id)?.value||t.nom;
+    const a=document.getElementById('aa'+t.id)?.value||t.artiste;
+    const y=document.getElementById('ay'+t.id)?.value||t.annee;
+    t.nom=n;t.artiste=a;t.annee=y;
+    localStorage.setItem('ln'+t.id,n);localStorage.setItem('la'+t.id,a);localStorage.setItem('ly'+t.id,y);
+    const nd=document.getElementById('nom-d'+t.id);if(nd)nd.textContent=n;
+    const ad=document.getElementById('art-d'+t.id);if(ad)ad.textContent=a+' · '+y;
+  });
+  showOk('okOeuvres');showToast('Œuvres mises à jour ✓');
+}
+function saveAbout(){
+  const ti=document.getElementById('adminAboutTitle').value;
+  const bo=document.getElementById('adminAboutText').value;
+  document.getElementById('aboutTitle').innerHTML=ti;
+  document.getElementById('aboutText').textContent=bo;
+  localStorage.setItem('labout-t',ti);localStorage.setItem('labout-b',bo);
+  showOk('okAbout');showToast('Histoire mise à jour ✓');
+}
+function saveAboutQuick(){
+  const ti=document.getElementById('qaTitle').value;
+  const bo=document.getElementById('qaText').value;
+  document.getElementById('aboutTitle').innerHTML=ti;
+  document.getElementById('aboutText').textContent=bo;
+  localStorage.setItem('labout-t',ti);localStorage.setItem('labout-b',bo);
+  closeModal('editAboutOverlay');showToast('Texte mis à jour ✓');
+}
+document.getElementById('editAboutBtn').addEventListener('click',()=>{
+  document.getElementById('qaTitle').value=document.getElementById('aboutTitle').innerText||'';
+  document.getElementById('qaText').value=document.getElementById('aboutText').textContent||'';
+});
+ 
+function handleUpload(event,id){
+  const f=event.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    imgs[id]=e.target.result;localStorage.setItem('li'+id,e.target.result);
+    const el=document.getElementById('img-'+id);
+    if(el){el.style.backgroundImage=`url(${e.target.result})`;el.style.backgroundSize='cover';el.style.backgroundPosition='center';el.innerHTML='';}
+    const s=document.getElementById('us'+id);if(s)s.textContent='Photo ajoutée ✓';
+    showToast('Photo chargée — '+T[id].nom);
+  };r.readAsDataURL(f);
+}
+ 
+/* ========== VIEWER 3D WebGL ========== */
+let rafId=null,dragging=false,lx=0,ly=0,rotX=0.2,rotY=0.5,zoom=3.6,currentT=null;
+ 
+function openV3D(id){
+  currentT=T[id];
+  document.getElementById('v3dTitle').textContent=currentT.nom;
+  document.getElementById('v3dArtist').textContent=currentT.artiste+' · '+currentT.annee;
+  document.getElementById('v3dNom').textContent=currentT.nom;
+  document.getElementById('v3dPrix').textContent=fmt(currentT.prix)+' €';
+  const ov=document.getElementById('viewer3dOverlay');
+  ov.classList.add('active');setTimeout(()=>ov.classList.add('visible'),10);
+  rotX=0.18;rotY=0.4;
+  requestAnimationFrame(()=>initGL(id));
+}
+function closeViewer3D(){
+  const ov=document.getElementById('viewer3dOverlay');
+  ov.classList.remove('visible');
+  setTimeout(()=>{ov.classList.remove('active');if(rafId)cancelAnimationFrame(rafId);},400);
+}
+ 
+function initGL(tid){
+  const canvas=document.getElementById('viewer3d');
+  const dpr=devicePixelRatio||1;
+  canvas.width=canvas.clientWidth*dpr;canvas.height=canvas.clientHeight*dpr;
+  const gl=canvas.getContext('webgl');if(!gl)return;
+ 
+  const vsrc=`attribute vec3 p;attribute vec2 u;attribute vec3 n;
+  uniform mat4 mvp;uniform mat4 nm;
+  varying vec2 vu;varying vec3 vn;varying vec3 vp;
+  void main(){gl_Position=mvp*vec4(p,1.);vu=u;vn=normalize((nm*vec4(n,0.)).xyz);vp=(nm*vec4(p,1.)).xyz;}`;
+  const fsrc=`precision mediump float;
+  varying vec2 vu;varying vec3 vn;varying vec3 vp;
+  uniform sampler2D tex;uniform bool useImg;uniform vec3 col;
+  void main(){
+    vec3 L=normalize(vec3(1.5,2.,1.));
+    float d=max(dot(vn,L),0.);
+    vec3 base=useImg?texture2D(tex,vu).rgb:col;
+    vec3 R=reflect(-L,vn);
+    float s=pow(max(dot(normalize(-vp),R),0.),24.)*.3;
+    gl_FragColor=vec4(base*.3+base*d+vec3(s),1.);}`;
+ 
+  function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+  const prog=gl.createProgram();
+  gl.attachShader(prog,sh(gl.VERTEX_SHADER,vsrc));
+  gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,fsrc));
+  gl.linkProgram(prog);gl.useProgram(prog);
+ 
+  // Geometry
+  const verts=[],uvs=[],nors=[],idxs=[];let vi=0;
+  function quad(p0,p1,p2,p3,uv0,uv1,uv2,uv3,nor){
+    verts.push(...p0,...p1,...p2,...p3);
+    uvs.push(...uv0,...uv1,...uv2,...uv3);
+    for(let i=0;i<4;i++)nors.push(...nor);
+    idxs.push(vi,vi+1,vi+2,vi,vi+2,vi+3);vi+=4;
+  }
+  const W=1.4,H=1.8,D=0.09,FW=0.1;
+  // Painting face
+  quad([-W/2,-H/2,D/2],[W/2,-H/2,D/2],[W/2,H/2,D/2],[-W/2,H/2,D/2],[0,0],[1,0],[1,1],[0,1],[0,0,1]);
+  // Back
+  quad([-W/2-FW,-H/2-FW,-D/2],[W/2+FW,-H/2-FW,-D/2],[W/2+FW,H/2+FW,-D/2],[-W/2-FW,H/2+FW,-D/2],[0,0],[1,0],[1,1],[0,1],[0,0,-1]);
+  // Top frame
+  quad([-W/2-FW,H/2,-D/2],[W/2+FW,H/2,-D/2],[W/2+FW,H/2+FW,D/2],[-W/2-FW,H/2+FW,D/2],[0,0],[1,0],[1,1],[0,1],[0,1,0]);
+  // Bottom frame
+  quad([-W/2-FW,-H/2-FW,D/2],[W/2+FW,-H/2-FW,D/2],[W/2+FW,-H/2,-D/2],[-W/2-FW,-H/2,-D/2],[0,0],[1,0],[1,1],[0,1],[0,-1,0]);
+  // Left frame
+  quad([-W/2-FW,-H/2-FW,D/2],[-W/2-FW,-H/2-FW,-D/2],[-W/2-FW,H/2+FW,-D/2],[-W/2-FW,H/2+FW,D/2],[0,0],[1,0],[1,1],[0,1],[-1,0,0]);
+  // Right frame
+  quad([W/2+FW,-H/2-FW,-D/2],[W/2+FW,-H/2-FW,D/2],[W/2+FW,H/2+FW,D/2],[W/2+FW,H/2+FW,-D/2],[0,0],[1,0],[1,1],[0,1],[1,0,0]);
+  // Frame inner bevel top
+  quad([-W/2,H/2,D/2],[W/2,H/2,D/2],[W/2+FW,H/2+FW,D/2],[-W/2-FW,H/2+FW,D/2],[0,0],[1,0],[1,1],[0,1],[0,0,1]);
+  quad([-W/2,-H/2-FW,D/2],[W/2+FW,-H/2-FW,D/2],[W/2,-H/2,D/2],[-W/2,-H/2,D/2],[0,0],[1,0],[1,1],[0,1],[0,0,1]);
+  quad([-W/2-FW,-H/2-FW,D/2],[-W/2,-H/2,D/2],[-W/2,H/2,D/2],[-W/2-FW,H/2+FW,D/2],[0,0],[1,0],[1,1],[0,1],[0,0,1]);
+  quad([W/2,-H/2,D/2],[W/2+FW,-H/2-FW,D/2],[W/2+FW,H/2+FW,D/2],[W/2,H/2,D/2],[0,0],[1,0],[1,1],[0,1],[0,0,1]);
+ 
+  function buf(data,type=gl.ARRAY_BUFFER){const b=gl.createBuffer();gl.bindBuffer(type,b);gl.bufferData(type,data,gl.STATIC_DRAW);return b;}
+  const vb=buf(new Float32Array(verts));
+  const ub=buf(new Float32Array(uvs));
+  const nb=buf(new Float32Array(nors));
+  const ib=buf(new Uint16Array(idxs),gl.ELEMENT_ARRAY_BUFFER);
+ 
+  const aP=gl.getAttribLocation(prog,'p'),aU=gl.getAttribLocation(prog,'u'),aN=gl.getAttribLocation(prog,'n');
+  const uMvp=gl.getUniformLocation(prog,'mvp'),uNm=gl.getUniformLocation(prog,'nm');
+  const uTex=gl.getUniformLocation(prog,'tex'),uUse=gl.getUniformLocation(prog,'useImg'),uCol=gl.getUniformLocation(prog,'col');
+ 
+  const texture=gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D,texture);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  const palettes=[[.17,.24,.31],[.54,.35,.4],[.1,.13,.25],[.91,.84,.72],[.18,.29,.24],[.24,.16,.12]];
+  const pc=palettes[tid]||[.6,.5,.4];
+  const dummy=new Uint8Array([Math.round(pc[0]*255),Math.round(pc[1]*255),Math.round(pc[2]*255),255]);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,dummy);
+  let texOk=false;
+  if(imgs[tid]){const img=new Image();img.onload=()=>{gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);texOk=true;};img.src=imgs[tid];}
+ 
+  // Controls
+  canvas.onmousedown=e=>{dragging=true;lx=e.clientX;ly=e.clientY;};
+  canvas.onmousemove=e=>{if(!dragging)return;rotY+=(e.clientX-lx)*.012;rotX+=(e.clientY-ly)*.006;lx=e.clientX;ly=e.clientY;};
+  window.onmouseup=()=>dragging=false;
+  canvas.onwheel=e=>{zoom=Math.max(2,Math.min(7,zoom+e.deltaY*.005));e.preventDefault();};
+  let lTX=0,lTY=0;
+  canvas.ontouchstart=e=>{lTX=e.touches[0].clientX;lTY=e.touches[0].clientY;e.preventDefault();};
+  canvas.ontouchmove=e=>{rotY+=(e.touches[0].clientX-lTX)*.014;rotX+=(e.touches[0].clientY-lTY)*.008;lTX=e.touches[0].clientX;lTY=e.touches[0].clientY;e.preventDefault();};
+ 
+  gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);
+  gl.cullFace(gl.BACK);
+ 
+  function loop(){
+    rafId=requestAnimationFrame(loop);
+    const cw=canvas.clientWidth*dpr,ch=canvas.clientHeight*dpr;
+    if(canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch;}
+    gl.viewport(0,0,canvas.width,canvas.height);
+    gl.clearColor(.03,.03,.03,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ 
+    const asp=canvas.width/canvas.height;
+    const proj=mPers(55*Math.PI/180,asp,.1,50);
+    const view=mLookAt([0,0,zoom],[0,0,0],[0,1,0]);
+    const model=mMul(mRotX(rotX),mRotY(rotY));
+    const mv=mMul(view,model);
+    const mvp=mMul(proj,mv);
+ 
+    gl.uniformMatrix4fv(uMvp,false,mvp);
+    gl.uniformMatrix4fv(uNm,false,model);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.uniform1i(uTex,0);
+ 
+    gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,ub);gl.enableVertexAttribArray(aU);gl.vertexAttribPointer(aU,2,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,nb);gl.enableVertexAttribArray(aN);gl.vertexAttribPointer(aN,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);
+ 
+    // Painting face (first 6 indices)
+    gl.uniform1i(uUse,texOk?1:0);gl.uniform3fv(uCol,pc);
+    gl.drawElements(gl.TRIANGLES,6,gl.UNSIGNED_SHORT,0);
+ 
+    // Frame parts (rest)
+    gl.uniform1i(uUse,0);gl.uniform3fv(uCol,[.62,.54,.42]);
+    gl.drawElements(gl.TRIANGLES,idxs.length-6,gl.UNSIGNED_SHORT,6*2);
+  }
+  loop();
+}
+ 
+/* Math */
+function mPers(f,a,n,far){const t=Math.tan(f/2),r=new Float32Array(16);r[0]=1/(a*t);r[5]=1/t;r[10]=(far+n)/(n-far);r[11]=-1;r[14]=(2*far*n)/(n-far);return r;}
+function mLookAt(e,c,u){const f=vn(vs(c,e)),s=vn(vc(f,u)),up=vc(s,f);return new Float32Array([s[0],up[0],-f[0],0,s[1],up[1],-f[1],0,s[2],up[2],-f[2],0,-vd(s,e),-vd(up,e),vd(f,e),1]);}
+function mRotY(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([c,0,s,0,0,1,0,0,-s,0,c,0,0,0,0,1]);}
+function mRotX(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([1,0,0,0,0,c,-s,0,0,s,c,0,0,0,0,1]);}
+function mMul(a,b){const r=new Float32Array(16);for(let i=0;i<4;i++)for(let j=0;j<4;j++)for(let k=0;k<4;k++)r[j*4+i]+=a[k*4+i]*b[j*4+k];return r;}
+function vn(v){const l=Math.hypot(...v);return v.map(x=>x/l);}
+function vs(a,b){return a.map((x,i)=>x-b[i]);}
+function vc(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
+function vd(a,b){return a.reduce((s,x,i)=>s+x*b[i],0);}
+ 
+/* SCROLL OBS */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.style.animationPlayState='running';}),{threshold:.1});
+ 
+/* INIT */
+loadData();buildGallery();attachCursors();
+</script>
+</body>
+</html>
